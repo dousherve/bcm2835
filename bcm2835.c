@@ -530,9 +530,10 @@ void bcm2835_spi_setClockDivider(uint16_t divider)
 
 void bcm2835_spi_set_speed_hz(uint32_t speed_hz)
 {
-    uint16_t divider = (uint16_t) ((uint32_t) BCM2835_CORE_CLK_HZ / speed_hz);
-    divider &= 0xFFFE;
-    bcm2835_spi_setClockDivider(divider);
+    // TODO: implement (commented out because division needs __aeabi_uidiv)
+    // uint16_t divider = (uint16_t) ((uint32_t) BCM2835_CORE_CLK_HZ / speed_hz);
+    // divider &= 0xFFFE;
+    // bcm2835_spi_setClockDivider(divider);
 }
 
 void bcm2835_spi_setDataMode(uint8_t mode)
@@ -762,21 +763,23 @@ void bcm2835_aux_spi_end(void)
 
 uint16_t bcm2835_aux_spi_CalcClockDivider(uint32_t speed_hz)
 {
-    uint16_t divider;
+    // TODO: implement (commented out because division needs __aeabi_uidiv)
+    // uint16_t divider;
 
-    if (speed_hz < (uint32_t) BCM2835_AUX_SPI_CLOCK_MIN) {
-	speed_hz = (uint32_t) BCM2835_AUX_SPI_CLOCK_MIN;
-    } else if (speed_hz > (uint32_t) BCM2835_AUX_SPI_CLOCK_MAX) {
-	speed_hz = (uint32_t) BCM2835_AUX_SPI_CLOCK_MAX;
-    }
+    // if (speed_hz < (uint32_t) BCM2835_AUX_SPI_CLOCK_MIN) {
+	// speed_hz = (uint32_t) BCM2835_AUX_SPI_CLOCK_MIN;
+    // } else if (speed_hz > (uint32_t) BCM2835_AUX_SPI_CLOCK_MAX) {
+	// speed_hz = (uint32_t) BCM2835_AUX_SPI_CLOCK_MAX;
+    // }
 
-    divider = (uint16_t) DIV_ROUND_UP(BCM2835_CORE_CLK_HZ, 2 * speed_hz) - 1;
+    // divider = (uint16_t) DIV_ROUND_UP(BCM2835_CORE_CLK_HZ, 2 * speed_hz) - 1;
 
-    if (divider > (uint16_t) BCM2835_AUX_SPI_CNTL0_SPEED_MAX) {
-	return (uint16_t) BCM2835_AUX_SPI_CNTL0_SPEED_MAX;
-    }
+    // if (divider > (uint16_t) BCM2835_AUX_SPI_CNTL0_SPEED_MAX) {
+	// return (uint16_t) BCM2835_AUX_SPI_CNTL0_SPEED_MAX;
+    // }
 
-    return divider;
+    // return divider;
+    return (0);
 }
 
 static uint32_t spi1_speed;
@@ -1072,10 +1075,11 @@ void bcm2835_i2c_setClockDivider(uint16_t divider)
 /* set I2C clock divider by means of a baudrate number */
 void bcm2835_i2c_set_baudrate(uint32_t baudrate)
 {
-	uint32_t divider;
-	/* use 0xFFFE mask to limit a max value and round down any odd number */
-	divider = (BCM2835_CORE_CLK_HZ / baudrate) & 0xFFFE;
-	bcm2835_i2c_setClockDivider( (uint16_t)divider );
+    // TODO: implement (commented out because division needs __aeabi_uidiv)
+	// uint32_t divider;
+	// /* use 0xFFFE mask to limit a max value and round down any odd number */
+	// divider = (BCM2835_CORE_CLK_HZ / baudrate) & 0xFFFE;
+	// bcm2835_i2c_setClockDivider( (uint16_t)divider );
 }
 
 /* Writes an number of bytes to I2C */
