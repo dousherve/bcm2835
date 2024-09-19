@@ -1,5 +1,5 @@
 /* bcm2835.h
-// C support for Broadcom BCM 2836 as used in Raspberry Pi 2
+// C support for Broadcom BCM 2835 as used in Raspberry Pi 2 (BCM2836)
 //
 // Based on bcm2835-1.75 (http://www.airspayce.com/mikem/bcm2835/bcm2835-1.75.tar.gz)
 // Stripped down and modified for bare-metal use on Raspberry Pi 2 (BCM2836)
@@ -29,15 +29,6 @@
   Pin event detection is supported by polling (interrupts are not supported).
 
   Works on Raspberry Pi 2 ONLY.
-
-  CAUTION: it has been observed that when detect enables such as bcm2835_gpio_len()
-  are used and the pin is pulled LOW
-  it can cause temporary hangs on 2012-07-15-wheezy-raspbian, 2013-07-26-wheezy-raspbian
-  and Occidentalisv01.
-  Reason for this is not yet determined, but we suspect that an interrupt handler is
-  hitting a hard loop on those OSs.
-  If you must use bcm2835_gpio_len() and friends, make sure you disable the pins with
-  bcm2835_gpio_clr_len() and friends after use.
 
   Although it is possible to select high speeds for the SPI interface, up to 125MHz (see bcm2835_spi_setClockDivider())
   you should not expect to actually achieve those sorts of speeds with the RPi wiring. Our tests on RPi 2 show that the

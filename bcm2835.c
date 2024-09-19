@@ -1,5 +1,5 @@
 /* bcm2835.c
-// C support for Broadcom BCM 2835 as used in Raspberry Pi
+// C support for Broadcom BCM 2835 as used in Raspberry Pi (BCM2836)
 //
 // Based on bcm2835-1.75 (http://www.airspayce.com/mikem/bcm2835/bcm2835-1.75.tar.gz)
 // Stripped down and modified for bare-metal use on Raspberry Pi 2 (BCM2836)
@@ -401,12 +401,14 @@ void bcm2835_gpio_set_pad(uint8_t group, uint32_t control)
 void bcm2835_delay(unsigned int millis)
 {
     // TODO: implement
+    (void) millis;
 }
 
 /* microseconds */
 void bcm2835_delayMicroseconds(uint64_t micros)
 {
     // TODO: implement
+    (void) micros;
 }
 
 /*
