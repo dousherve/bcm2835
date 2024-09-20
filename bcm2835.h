@@ -823,12 +823,6 @@ typedef enum
     BCM2835_PWM_CLOCK_DIVIDER_1     = 1        /*!< 1 = 4.6875kHz, same as divider 4096 */
 } bcm2835PWMClockDivider;
 
-/* Historical name compatibility */
-#ifndef BCM2835_NO_DELAY_COMPATIBILITY
-#define delay(x) bcm2835_delay(x)
-#define delayMicroseconds(x) bcm2835_delayMicroseconds(x)
-#endif
-
 #ifdef __cplusplus
 extern "C" {
 #endif

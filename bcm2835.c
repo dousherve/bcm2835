@@ -391,15 +391,13 @@ void bcm2835_gpio_set_pad(uint8_t group, uint32_t control)
 */
 void bcm2835_delay(unsigned int millis)
 {
-    // TODO: implement
-    (void) millis;
+    bcm2835_st_delay(bcm2835_st_read(), (uint64_t) (millis * 1000));
 }
 
 /* microseconds */
 void bcm2835_delayMicroseconds(uint64_t micros)
 {
-    // TODO: implement
-    (void) micros;
+    bcm2835_st_delay(bcm2835_st_read(), micros);
 }
 
 /*
@@ -453,9 +451,9 @@ void bcm2835_gpio_write_mask(uint32_t value, uint32_t mask)
 void bcm2835_gpio_set_pud(uint8_t pin, uint8_t pud)
 {
     bcm2835_gpio_pud(pud);
-	delayMicroseconds(10);
+	bcm2835_delayMicroseconds(10);
 	bcm2835_gpio_pudclk(pin, 1);
-	delayMicroseconds(10);
+	bcm2835_delayMicroseconds(10);
 	bcm2835_gpio_pud(BCM2835_GPIO_PUD_OFF);
 	bcm2835_gpio_pudclk(pin, 0);
 }
