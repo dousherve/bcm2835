@@ -838,28 +838,6 @@ extern "C" {
       @{
     */
 
-    /*! Initialise the library by opening /dev/mem (if you are root)
-      or /dev/gpiomem (if you are not)
-      and getting pointers to the
-      internal memory for BCM 2835 device registers. You must call this (successfully)
-      before calling any other
-      functions in this library.
-      If bcm2835_init() fails by returning 0,
-      calling any other function may result in crashes or other failures.
-      \return 1 if successful else 0
-    */
-    extern int bcm2835_init(void);
-
-    /*! Close the library, deallocating any allocated memory and closing /dev/mem
-      \return 1 if successful else 0
-    */
-    extern int bcm2835_close(void);
-
-    /*! Returns the version number of the library, same as BCM2835_VERSION
-       \return the current library version number
-    */
-    extern unsigned int bcm2835_version(void);
-
     /*! @} */
 
     /*! \defgroup lowlevel Low level register access

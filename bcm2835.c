@@ -17,25 +17,21 @@
 // $Id: bcm2835.c,v 1.28 2020/01/11 05:07:13 mikem Exp mikem $
 */
 
-#define BCK2835_LIBRARY_BUILD
 #include "bcm2835.h"
 
-uint32_t *bcm2835_peripherals = (uint32_t *)(BCM2835_PERI_BASE);
-
-/* And the register bases within the peripherals block
- */
-volatile uint32_t *bcm2835_pwm         = (uint32_t *)(0);
-volatile uint32_t *bcm2835_gpio        = (uint32_t *)(0);
-volatile uint32_t *bcm2835_clk         = (uint32_t *)(0);
-volatile uint32_t *bcm2835_pads        = (uint32_t *)(0);
-volatile uint32_t *bcm2835_spi0        = (uint32_t *)(0);
-volatile uint32_t *bcm2835_bsc0        = (uint32_t *)(0);
-volatile uint32_t *bcm2835_bsc1        = (uint32_t *)(0);
-volatile uint32_t *bcm2835_st	       = (uint32_t *)(0);
-volatile uint32_t *bcm2835_aux	       = (uint32_t *)(0);
-volatile uint32_t *bcm2835_spi1        = (uint32_t *)(0);
+/* Register bases within the peripherals block */
+volatile uint32_t *bcm2835_pwm         = (uint32_t *)(BCM2835_PERI_BASE + BCM2835_GPIO_PWM/4);
+volatile uint32_t *bcm2835_gpio        = (uint32_t *)(BCM2835_PERI_BASE + BCM2835_GPIO_BASE/4);
+volatile uint32_t *bcm2835_clk         = (uint32_t *)(BCM2835_PERI_BASE + BCM2835_CLOCK_BASE/4);
+volatile uint32_t *bcm2835_pads        = (uint32_t *)(BCM2835_PERI_BASE + BCM2835_GPIO_PADS/4);
+volatile uint32_t *bcm2835_spi0        = (uint32_t *)(BCM2835_PERI_BASE + BCM2835_SPI0_BASE/4);
+volatile uint32_t *bcm2835_bsc0        = (uint32_t *)(BCM2835_PERI_BASE + BCM2835_BSC0_BASE/4);
+volatile uint32_t *bcm2835_bsc1        = (uint32_t *)(BCM2835_PERI_BASE + BCM2835_BSC1_BASE/4);
+volatile uint32_t *bcm2835_st	       = (uint32_t *)(BCM2835_PERI_BASE + BCM2835_ST_BASE/4);
+volatile uint32_t *bcm2835_aux	       = (uint32_t *)(BCM2835_PERI_BASE + BCM2835_AUX_BASE/4);
+volatile uint32_t *bcm2835_spi1        = (uint32_t *)(BCM2835_PERI_BASE + BCM2835_SPI1_BASE/4);
 /* BEB*/
-volatile uint32_t *bcm2835_smi         = (uint32_t *)(0);
+volatile uint32_t *bcm2835_smi         = (uint32_t *)(BCM2835_PERI_BASE + BCM2835_SMI_BASE/4);
 
 /* I2C The time needed to transmit one byte. In microseconds.
  */
@@ -123,11 +119,6 @@ uint32_t* bcm2835_regbase(uint8_t regbase)
 	    return (uint32_t *)bcm2835_smi;
     }
     return (uint32_t *)(0);
-}
-
-unsigned int bcm2835_version(void)
-{
-    return BCM2835_VERSION;
 }
 
 /* Read from peripheral */
@@ -483,7 +474,7 @@ int bcm2835_spi_begin(void)
     volatile uint32_t* paddr;
 
     if (bcm2835_spi0 == (0))
-      return 0; /* bcm2835_init() failed, or not root */
+      return 0;
 
     /* Set the SPI0 pins to the Alt 0 function to enable SPI0 access on them */
     bcm2835_gpio_fsel(RPI_GPIO_P1_26, BCM2835_GPIO_FSEL_ALT0); /* CE1 */
@@ -530,10 +521,9 @@ void bcm2835_spi_setClockDivider(uint16_t divider)
 
 void bcm2835_spi_set_speed_hz(uint32_t speed_hz)
 {
-    // TODO: implement (commented out because division needs __aeabi_uidiv)
-    // uint16_t divider = (uint16_t) ((uint32_t) BCM2835_CORE_CLK_HZ / speed_hz);
-    // divider &= 0xFFFE;
-    // bcm2835_spi_setClockDivider(divider);
+    uint16_t divider = (uint16_t) ((uint32_t) BCM2835_CORE_CLK_HZ / speed_hz);
+    divider &= 0xFFFE;
+    bcm2835_spi_setClockDivider(divider);
 }
 
 void bcm2835_spi_setDataMode(uint8_t mode)
@@ -733,7 +723,7 @@ int bcm2835_aux_spi_begin(void)
     volatile uint32_t* cntl1 = bcm2835_spi1 + BCM2835_AUX_SPI_CNTL1/4;
 
     if (bcm2835_spi1 == (0))
-	return 0; /* bcm2835_init() failed */
+	return 0;
 
     /* Set the SPI pins to the Alt 4 function to enable SPI1 access on them */
     bcm2835_gpio_fsel(RPI_V2_GPIO_P1_36, BCM2835_GPIO_FSEL_ALT4);	/* SPI1_CE2_N */
@@ -763,23 +753,21 @@ void bcm2835_aux_spi_end(void)
 
 uint16_t bcm2835_aux_spi_CalcClockDivider(uint32_t speed_hz)
 {
-    // TODO: implement (commented out because division needs __aeabi_uidiv)
-    // uint16_t divider;
+    uint16_t divider;
 
-    // if (speed_hz < (uint32_t) BCM2835_AUX_SPI_CLOCK_MIN) {
-	// speed_hz = (uint32_t) BCM2835_AUX_SPI_CLOCK_MIN;
-    // } else if (speed_hz > (uint32_t) BCM2835_AUX_SPI_CLOCK_MAX) {
-	// speed_hz = (uint32_t) BCM2835_AUX_SPI_CLOCK_MAX;
-    // }
+    if (speed_hz < (uint32_t) BCM2835_AUX_SPI_CLOCK_MIN) {
+	speed_hz = (uint32_t) BCM2835_AUX_SPI_CLOCK_MIN;
+    } else if (speed_hz > (uint32_t) BCM2835_AUX_SPI_CLOCK_MAX) {
+	speed_hz = (uint32_t) BCM2835_AUX_SPI_CLOCK_MAX;
+    }
 
-    // divider = (uint16_t) DIV_ROUND_UP(BCM2835_CORE_CLK_HZ, 2 * speed_hz) - 1;
+    divider = (uint16_t) DIV_ROUND_UP(BCM2835_CORE_CLK_HZ, 2 * speed_hz) - 1;
 
-    // if (divider > (uint16_t) BCM2835_AUX_SPI_CNTL0_SPEED_MAX) {
-	// return (uint16_t) BCM2835_AUX_SPI_CNTL0_SPEED_MAX;
-    // }
+    if (divider > (uint16_t) BCM2835_AUX_SPI_CNTL0_SPEED_MAX) {
+	return (uint16_t) BCM2835_AUX_SPI_CNTL0_SPEED_MAX;
+    }
 
-    // return divider;
-    return (0);
+    return divider;
 }
 
 static uint32_t spi1_speed;
@@ -1004,7 +992,7 @@ int bcm2835_i2c_begin(void)
 
     if (   bcm2835_bsc0 == (0)
 	|| bcm2835_bsc1 == (0))
-      return 0; /* bcm2835_init() failed, or not root */
+      return 0;
 
 #ifdef I2C_V1
     volatile uint32_t* paddr = bcm2835_bsc0 + BCM2835_BSC_DIV/4;
@@ -1075,11 +1063,10 @@ void bcm2835_i2c_setClockDivider(uint16_t divider)
 /* set I2C clock divider by means of a baudrate number */
 void bcm2835_i2c_set_baudrate(uint32_t baudrate)
 {
-    // TODO: implement (commented out because division needs __aeabi_uidiv)
-	// uint32_t divider;
-	// /* use 0xFFFE mask to limit a max value and round down any odd number */
-	// divider = (BCM2835_CORE_CLK_HZ / baudrate) & 0xFFFE;
-	// bcm2835_i2c_setClockDivider( (uint16_t)divider );
+	uint32_t divider;
+	/* use 0xFFFE mask to limit a max value and round down any odd number */
+	divider = (BCM2835_CORE_CLK_HZ / baudrate) & 0xFFFE;
+	bcm2835_i2c_setClockDivider( (uint16_t)divider );
 }
 
 /* Writes an number of bytes to I2C */
@@ -1446,7 +1433,7 @@ int bcm2835_smi_begin(void)
     uint32_t defConfig;
 
     if (bcm2835_smi == (0))
-      return 0; /* bcm2835_smi_init() failed, or not root */
+      return 0;
 
     /* Set the SMI pins to the Alt 1 function to enable SMI access on them */
     bcm2835_gpio_fsel(2, BCM2835_GPIO_FSEL_ALT1); /* SA3 */
@@ -1683,7 +1670,7 @@ void bcm2835_pwm_set_clock(uint32_t divisor)
 {
     if (   bcm2835_clk == (0)
         || bcm2835_pwm == (0))
-      return; /* bcm2835_init() failed or not root */
+      return;
 
     /* From Gerts code */
     divisor &= 0xfff;
@@ -1702,7 +1689,7 @@ void bcm2835_pwm_set_mode(uint8_t channel, uint8_t markspace, uint8_t enabled)
 {
   if (   bcm2835_clk == (0)
        || bcm2835_pwm == (0))
-    return; /* bcm2835_init() failed or not root */
+    return;
 
   uint32_t control = bcm2835_peri_read(bcm2835_pwm + BCM2835_PWM_CONTROL);
 
@@ -1736,7 +1723,7 @@ void bcm2835_pwm_set_range(uint8_t channel, uint32_t range)
 {
   if (   bcm2835_clk == (0)
        || bcm2835_pwm == (0))
-    return; /* bcm2835_init() failed or not root */
+    return;
 
   if (channel == 0)
       bcm2835_peri_write(bcm2835_pwm + BCM2835_PWM0_RANGE, range);
@@ -1748,39 +1735,10 @@ void bcm2835_pwm_set_data(uint8_t channel, uint32_t data)
 {
   if (   bcm2835_clk == (0)
        || bcm2835_pwm == (0))
-    return; /* bcm2835_init() failed or not root */
+    return;
 
   if (channel == 0)
       bcm2835_peri_write(bcm2835_pwm + BCM2835_PWM0_DATA, data);
   else if (channel == 1)
       bcm2835_peri_write(bcm2835_pwm + BCM2835_PWM1_DATA, data);
-}
-
-/* Initialise this library. */
-int bcm2835_init(void)
-{
-    /* Compute the base addresses of various peripherals,
-    // which are at fixed offsets within the mapped peripherals block
-    // Caution: bcm2835_peripherals is uint32_t*, so divide offsets by 4
-    */
-    bcm2835_gpio = bcm2835_peripherals + BCM2835_GPIO_BASE/4;
-    bcm2835_pwm  = bcm2835_peripherals + BCM2835_GPIO_PWM/4;
-    bcm2835_clk  = bcm2835_peripherals + BCM2835_CLOCK_BASE/4;
-    bcm2835_pads = bcm2835_peripherals + BCM2835_GPIO_PADS/4;
-    bcm2835_spi0 = bcm2835_peripherals + BCM2835_SPI0_BASE/4;
-    bcm2835_bsc0 = bcm2835_peripherals + BCM2835_BSC0_BASE/4; /* I2C */
-    bcm2835_bsc1 = bcm2835_peripherals + BCM2835_BSC1_BASE/4; /* I2C */
-    bcm2835_st   = bcm2835_peripherals + BCM2835_ST_BASE/4;
-    bcm2835_aux  = bcm2835_peripherals + BCM2835_AUX_BASE/4;
-    bcm2835_spi1 = bcm2835_peripherals + BCM2835_SPI1_BASE/4;
-    /* BEB */
-    bcm2835_smi  = bcm2835_peripherals + BCM2835_SMI_BASE/4;
-
-    return 1;
-}
-
-/* Close this library and deallocate everything */
-int bcm2835_close(void)
-{
-    return 1; /* Success */
 }
