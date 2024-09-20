@@ -20,16 +20,16 @@
 #include "bcm2835.h"
 
 /* Register bases within the peripherals block */
-volatile uint32_t *bcm2835_pwm         = (uint32_t *)(BCM2835_PERI_BASE + BCM2835_GPIO_PWM/4);
-volatile uint32_t *bcm2835_gpio        = (uint32_t *)(BCM2835_PERI_BASE + BCM2835_GPIO_BASE/4);
-volatile uint32_t *bcm2835_clk         = (uint32_t *)(BCM2835_PERI_BASE + BCM2835_CLOCK_BASE/4);
-volatile uint32_t *bcm2835_pads        = (uint32_t *)(BCM2835_PERI_BASE + BCM2835_GPIO_PADS/4);
-volatile uint32_t *bcm2835_spi0        = (uint32_t *)(BCM2835_PERI_BASE + BCM2835_SPI0_BASE/4);
-volatile uint32_t *bcm2835_bsc0        = (uint32_t *)(BCM2835_PERI_BASE + BCM2835_BSC0_BASE/4);
-volatile uint32_t *bcm2835_bsc1        = (uint32_t *)(BCM2835_PERI_BASE + BCM2835_BSC1_BASE/4);
-volatile uint32_t *bcm2835_st	       = (uint32_t *)(BCM2835_PERI_BASE + BCM2835_ST_BASE/4);
-volatile uint32_t *bcm2835_aux	       = (uint32_t *)(BCM2835_PERI_BASE + BCM2835_AUX_BASE/4);
-volatile uint32_t *bcm2835_spi1        = (uint32_t *)(BCM2835_PERI_BASE + BCM2835_SPI1_BASE/4);
+volatile uint32_t *bcm2835_pwm         = (uint32_t *)(BCM2835_PERI_BASE + BCM2835_GPIO_PWM);
+volatile uint32_t *bcm2835_gpio        = (uint32_t *)(BCM2835_PERI_BASE + BCM2835_GPIO_BASE);
+volatile uint32_t *bcm2835_clk         = (uint32_t *)(BCM2835_PERI_BASE + BCM2835_CLOCK_BASE);
+volatile uint32_t *bcm2835_pads        = (uint32_t *)(BCM2835_PERI_BASE + BCM2835_GPIO_PADS);
+volatile uint32_t *bcm2835_spi0        = (uint32_t *)(BCM2835_PERI_BASE + BCM2835_SPI0_BASE);
+volatile uint32_t *bcm2835_bsc0        = (uint32_t *)(BCM2835_PERI_BASE + BCM2835_BSC0_BASE);
+volatile uint32_t *bcm2835_bsc1        = (uint32_t *)(BCM2835_PERI_BASE + BCM2835_BSC1_BASE);
+volatile uint32_t *bcm2835_st	       = (uint32_t *)(BCM2835_PERI_BASE + BCM2835_ST_BASE);
+volatile uint32_t *bcm2835_aux	       = (uint32_t *)(BCM2835_PERI_BASE + BCM2835_AUX_BASE);
+volatile uint32_t *bcm2835_spi1        = (uint32_t *)(BCM2835_PERI_BASE + BCM2835_SPI1_BASE);
 /* BEB*/
 volatile uint32_t *bcm2835_smi         = (uint32_t *)(BCM2835_PERI_BASE + BCM2835_SMI_BASE/4);
 
